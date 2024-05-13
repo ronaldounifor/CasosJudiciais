@@ -31,4 +31,5 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
+    
 }
