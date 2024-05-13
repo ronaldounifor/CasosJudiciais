@@ -17,6 +17,9 @@ import br.cnj.casosjudiciais.dto.CasoJudicialDTO;
 import br.cnj.casosjudiciais.dto.CasoJudicialMapper;
 import br.cnj.casosjudiciais.model.CasoJudicial;
 import br.cnj.casosjudiciais.service.CasoJudicialService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/casos")
@@ -30,23 +33,39 @@ public class CasoJudicialController {
         this.mapper = mapper;
     }
 
+    @Operation(summary = "Recupera todos os casos judiciais", method = "GET") 
+    @ApiResponses(value = { 
+                  @ApiResponse(responseCode = "200", description = "Casos recuperados com sucesso"), 
+                  @ApiResponse(responseCode = "500", description = "Erro!")}) 
     @GetMapping
     public ResponseEntity<List<CasoJudicialDTO>> pegarTodosOsCasos() {
         return new ResponseEntity<>(mapper.casosToCasosDTO(service.listarCasos()), HttpStatus.OK);
     }
 
+    @Operation(summary = "Recupera um casos judiciais pelo ID", method = "GET") 
+    @ApiResponses(value = { 
+                  @ApiResponse(responseCode = "200", description = "Caso recuperado com sucesso"), 
+                  @ApiResponse(responseCode = "500", description = "Erro!")}) 
     @GetMapping("/{id}")
     public ResponseEntity<CasoJudicialDTO> pegarCasoPorID(@PathVariable Integer id) {
         CasoJudicial caso = service.encontrarCasoPorId(id);
         return ResponseEntity.ok(mapper.casoJudicialToDTO(caso));
     }
 
+    @Operation(summary = "Registra um novo caso judicial", method = "POST") 
+    @ApiResponses(value = { 
+                  @ApiResponse(responseCode = "200", description = "Caso registrado com sucesso"), 
+                  @ApiResponse(responseCode = "500", description = "Erro!")}) 
     @PostMapping
     public ResponseEntity<CasoJudicialDTO> criarCaso(@RequestBody CasoJudicialDTO novoCaso) {
         service.salvarCaso(mapper.dtoToCasoJudicial(novoCaso));
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(novoCaso);
     }
 
+    @Operation(summary = "Remove um casos judiciais pelo ID", method = "GET") 
+    @ApiResponses(value = { 
+                  @ApiResponse(responseCode = "204", description = "Caso removido com sucesso"), 
+                  @ApiResponse(responseCode = "500", description = "Erro!")}) 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarCaso(@PathVariable Integer id) {
         service.excluirCaso(id);
