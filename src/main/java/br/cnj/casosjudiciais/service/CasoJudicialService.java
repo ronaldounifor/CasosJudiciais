@@ -1,37 +1,33 @@
 package br.cnj.casosjudiciais.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import br.cnj.casosjudiciais.model.CasoJudicial;
+import br.cnj.casosjudiciais.repository.CasoJudicialRepository;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public class CasoJudicialService {
+    
+    private final CasoJudicialRepository casoRepository;
 
-    private ArrayList<CasoJudicial> casos = new ArrayList<>();
-
-    public CasoJudicialService() {
+    public CasoJudicialService(CasoJudicialRepository casoRepository) {
+        this.casoRepository = casoRepository;
     }
     
     public List<CasoJudicial> listarCasos() {
-        return casos;
+        return casoRepository.findAll();
     }
 
     public CasoJudicial encontrarCasoPorId(int id) {
-        for (CasoJudicial casoJudicial : casos)
-            if(casoJudicial.getNumero() == id) return casoJudicial;
-        
-        return null;
+        return casoRepository.getReferenceById(id);
     }
 
     public void salvarCaso(CasoJudicial caso) {
-        casos.add(caso);
+        casoRepository.save(caso);
     }
 
     public void excluirCaso(int id) {
-        CasoJudicial caso = encontrarCasoPorId(id);
-        
-        if(caso != null)
-            casos.remove(caso);
+        casoRepository.delete(encontrarCasoPorId(id));
     }
 }

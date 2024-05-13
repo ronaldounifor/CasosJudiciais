@@ -1,23 +1,9 @@
-package br.cnj.casosjudiciais.model;
+package br.cnj.casosjudiciais.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-
-@Entity
-public class CasoJudicial {
-    @Id
+public class CasoJudicialDTO {
     private int numero;
     private char decisao;
     private String descricao;
-
-    public CasoJudicial() {
-    }
-
-    public CasoJudicial(int numero, char decisao, String descricao) {
-        this.numero = numero;
-        this.decisao = decisao;
-        this.descricao = descricao;
-    }
     
     public int getNumero() {
         return numero;
