@@ -2,6 +2,8 @@ package br.cnj.casosjudiciais.controller;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/api/casos")
 public class CasoJudicialController {
 
+    private static final Logger logger = LogManager.getLogger(CasoJudicialController.class);
     private final CasoJudicialService service;
     private final CasoJudicialMapper mapper;
 
@@ -39,6 +42,7 @@ public class CasoJudicialController {
                   @ApiResponse(responseCode = "500", description = "Erro!")}) 
     @GetMapping
     public ResponseEntity<List<CasoJudicialDTO>> pegarTodosOsCasos() {
+        logger.info("Pegar todos os casos");
         return new ResponseEntity<>(mapper.casosToCasosDTO(service.listarCasos()), HttpStatus.OK);
     }
 
@@ -48,6 +52,7 @@ public class CasoJudicialController {
                   @ApiResponse(responseCode = "500", description = "Erro!")}) 
     @GetMapping("/{id}")
     public ResponseEntity<CasoJudicialDTO> pegarCasoPorID(@PathVariable Integer id) {
+        logger.info("Pegar caso de numero '{}''.", id);
         CasoJudicial caso = service.encontrarCasoPorId(id);
         return ResponseEntity.ok(mapper.casoJudicialToDTO(caso));
     }
@@ -58,6 +63,7 @@ public class CasoJudicialController {
                   @ApiResponse(responseCode = "500", description = "Erro!")}) 
     @PostMapping
     public ResponseEntity<CasoJudicialDTO> criarCaso(@RequestBody CasoJudicialDTO novoCaso) {
+        logger.info("Salvar caso de numero '{}''.", novoCaso.getNumero());
         service.salvarCaso(mapper.dtoToCasoJudicial(novoCaso));
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(novoCaso);
     }
@@ -68,6 +74,7 @@ public class CasoJudicialController {
                   @ApiResponse(responseCode = "500", description = "Erro!")}) 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarCaso(@PathVariable Integer id) {
+        logger.info("Remover caso de numero '{}''.", id);
         service.excluirCaso(id);
         return ResponseEntity.noContent().build();
     }
